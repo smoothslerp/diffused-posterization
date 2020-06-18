@@ -36,6 +36,7 @@
         {
             float4 vertex; 
             float2 uv_MainTex;
+            float2 uv_NoiseTex;
             float2 uv_NormalTex;
             float4 screenPos;
         };
@@ -75,20 +76,14 @@
             return ceil(v*step)/step;
         }
 
-        void surf (Input IN, inout SurfaceOutputCustom o)
-        {
-
+        void surf (Input IN, inout SurfaceOutputCustom o) {
             float2 textureCoordinate = IN.screenPos.xy / IN.screenPos.w; // perspective divide
             float aspect = _ScreenParams.x / _ScreenParams.y;
             textureCoordinate.x = textureCoordinate.x * aspect;
             textureCoordinate += float2(_Time.y/10, _Time.y/20);
-
-            fixed noise = tex2D (_NoiseTex, frac(textureCoordinate * _NoiseScale));
+            
+            fixed noise = tex2D (_NoiseTex,  frac(textureCoordinate * _NoiseScale)); 
             fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-
-            //// THIS IS THE MAIN IDEA
-            // fixed4 bar = step(IN.uv_MainTex.y, post) - step(IN.uv_MainTex.y, post-.01); //(a,x) => a < x
-            // fixed4 c = (1-bar) * post + bar * float4(1,0,0,1); 
 
             o.Normal = UnpackNormal(tex2D(_NormalTex, IN.uv_NormalTex));
             o.Albedo = c.rgb;
@@ -99,12 +94,12 @@
         half4 LightingCustom (SurfaceOutputCustom s, half3 lightDir, half3 viewDir) {
             float NdotL = max(0, dot(s.Normal, lightDir));
 
-            float invP = 1.0/_Step;
+            float invStep = 1.0/_Step;
             fixed post = posterize(NdotL, _Step);
-            fixed bar = step(NdotL, post) - step(NdotL, post-invP/s.noise/10); //(a,x) => a < x
+            fixed bar = step(NdotL, post) - step(NdotL, post-s.noise/_Step);
 
-            fixed painterly = (1-bar) * post + bar * (post+invP);
-            half3 l = (s.Albedo * painterly + _AmbientColor * _AmbientStrength);
+            fixed b = (1-bar) * post + bar * (post+invStep);
+            half3 l = (s.Albedo * b + _AmbientColor * _AmbientStrength);
         
             half4 col;
             col.rgb = l;
