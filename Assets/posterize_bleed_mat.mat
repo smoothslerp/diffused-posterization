@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: painterly_mat
-  m_Shader: {fileID: 4800000, guid: 4dbda008be3553342b99829c83c3522f, type: 3}
+  m_Name: posterize_bleed_mat
+  m_Shader: {fileID: 4800000, guid: fb2ec2b6e148e8042a5dba27abf99ac2, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
