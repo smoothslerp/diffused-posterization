@@ -47,23 +47,12 @@
         };
 
         
-        float invLerp(float a, float b, float v) {
-            return (v - a)/(b - a);
-        }
-
-        float circle(float2 st, float radius, float fadeWidth) {
-            float ic = radius - fadeWidth;
-            float d = distance(st, float2(0.5, 0.5));
-            float fc = invLerp(radius, ic, d);
-
-            return fc;
-        }
-
-        float posterize(float v, float step) {
-            return ceil(v*step)/step;
+        float posterize(float v, float k) {
+            return ceil(v*k)/k;
         }
 
         void surf (Input IN, inout SurfaceOutputCustom o) {
+            
             float2 textureCoordinate = IN.screenPos.xy / IN.screenPos.w; // perspective divide
             float aspect = _ScreenParams.x / _ScreenParams.y;
             textureCoordinate.x = textureCoordinate.x * aspect;
