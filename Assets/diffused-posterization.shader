@@ -1,4 +1,4 @@
-﻿Shader "Custom/posterize_bleed"
+﻿Shader "Custom/diffused-posterization"
 {
     Properties
     {
